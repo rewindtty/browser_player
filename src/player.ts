@@ -11,6 +11,7 @@ export class RewindTTYPlayer {
   private terminal: Terminal;
   private fitAddon: FitAddon;
   private sessions: Session[] = [];
+  private isInteractiveMode: boolean = false;
   private bookmarks: Bookmark[] = [];
   private playbackState: PlaybackState;
   private timelineCommands: TimelineCommand[] = [];
@@ -227,7 +228,18 @@ export class RewindTTYPlayer {
     reader.onload = (e) => {
       try {
         const content = e.target?.result as string;
-        this.sessions = JSON.parse(content);
+        const sessionData = JSON.parse(content);
+
+        // Check if it's the new format with metadata
+        if (sessionData.metadata && sessionData.sessions) {
+          this.sessions = sessionData.sessions;
+          this.isInteractiveMode = sessionData.metadata.interactive_mode || false;
+        } else {
+          // Legacy format - assume it's directly an array of sessions
+          this.sessions = Array.isArray(sessionData) ? sessionData : [sessionData];
+          this.isInteractiveMode = false;
+        }
+
         this.processSessionData();
         this.elements.currentCommand.textContent = `Loaded: ${file.name}`;
         this.isJsonLoaded = true;
@@ -255,7 +267,18 @@ export class RewindTTYPlayer {
     reader.onload = (e) => {
       try {
         const content = e.target?.result as string;
-        this.sessions = JSON.parse(content);
+        const sessionData = JSON.parse(content);
+
+        // Check if it's the new format with metadata
+        if (sessionData.metadata && sessionData.sessions) {
+          this.sessions = sessionData.sessions;
+          this.isInteractiveMode = sessionData.metadata.interactive_mode || false;
+        } else {
+          // Legacy format - assume it's directly an array of sessions
+          this.sessions = Array.isArray(sessionData) ? sessionData : [sessionData];
+          this.isInteractiveMode = false;
+        }
+
         this.processSessionData();
         this.elements.currentCommand.textContent = `Loaded: ${file.name}`;
         this.play();
@@ -269,7 +292,13 @@ export class RewindTTYPlayer {
   }
 
   private processSessionData(): void {
-    this.restart();
+    // Ensure we start from the beginning
+    this.playbackState.currentTime = 0;
+    this.playbackState.currentSessionIndex = 0;
+    this.playbackState.currentChunkIndex = 0;
+    this.lastProcessedTime = 0;
+    this.terminal.clear();
+    
     this.calculateTotalDuration();
     this.createTimelineCommands();
     this.renderTimelineCommands();
@@ -456,8 +485,8 @@ export class RewindTTYPlayer {
       return;
     }
 
-    // Only process chunks if we've moved forward significantly
-    if (this.playbackState.currentTime > this.lastProcessedTime + 50) {
+    // Always process chunks when we're at the beginning (first ~200ms) or when we've moved forward significantly
+    if (this.playbackState.currentTime <= 200 || this.playbackState.currentTime > this.lastProcessedTime + 50) {
       this.processChunksUpToTime(this.playbackState.currentTime);
       this.lastProcessedTime = this.playbackState.currentTime;
     }
@@ -484,7 +513,10 @@ export class RewindTTYPlayer {
       if (sessionIndex > this.playbackState.currentSessionIndex) {
         this.playbackState.currentSessionIndex = sessionIndex;
         this.playbackState.currentChunkIndex = 0;
-        this.terminal.write(`\r\nrewindtty> ${session.command}\r\n`);
+        // Don't show command prompts in interactive mode
+        if (!this.isInteractiveMode) {
+          this.terminal.write(`\r\nrewindtty> ${session.command}\r\n`);
+        }
       }
 
       // Start from current chunk index
@@ -501,7 +533,13 @@ export class RewindTTYPlayer {
         const chunk = session.chunks[chunkIndex];
         const chunkTime = sessionStartTime + chunk.time * 1000;
 
-        if (chunkTime <= targetTime) {
+        // Special case: if we're at the very beginning (targetTime < 500ms), process all early chunks
+        // Otherwise use normal timing logic
+        const shouldProcessChunk = targetTime < 500 
+          ? chunkTime <= targetTime + 100  // Be more lenient at the beginning
+          : chunkTime <= targetTime;
+
+        if (shouldProcessChunk) {
           this.terminal.write(chunk.data);
           this.playbackState.currentChunkIndex = chunkIndex + 1;
         } else {

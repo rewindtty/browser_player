@@ -12,6 +12,15 @@ export interface Session {
     chunks: SessionChunk[];
 }
 
+export interface SessionFile {
+    metadata: {
+        version: string;
+        interactive_mode: boolean;
+        timestamp: number;
+    };
+    sessions: Session[];
+}
+
 export interface Bookmark {
     id: string;
     name: string;
