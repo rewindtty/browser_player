@@ -36,7 +36,7 @@ export class RewindTTYPlayer {
     fileInput: HTMLInputElement;
     loadFileBtn: HTMLButtonElement;
     modal: HTMLElement;
-    modalFileInput: HTMLInputElement;
+    modalFileInput: HTMLButtonElement;
     modalLoadFileBtn: HTMLButtonElement;
     commandListBtn: HTMLButtonElement;
     commandSidebar: HTMLElement;
@@ -79,28 +79,28 @@ export class RewindTTYPlayer {
     return {
       currentCommand: document.getElementById("current-command")!,
       sessionTime: document.getElementById("session-time")!,
-      playPauseBtn: document.getElementById("play-pause-btn")!,
-      restartBtn: document.getElementById("restart-btn")!,
-      speedBtn: document.getElementById("speed-btn")!,
+      playPauseBtn: document.getElementById("play-pause-btn")! as HTMLButtonElement,
+      restartBtn: document.getElementById("restart-btn")! as HTMLButtonElement,
+      speedBtn: document.getElementById("speed-btn")! as HTMLButtonElement,
       timeline: document.getElementById("timeline")!,
       timelineProgress: document.getElementById("timeline-progress")!,
       timelineCommands: document.getElementById("timeline-commands")!,
       timelineScrubber: document.getElementById("timeline-scrubber")!,
       bookmarksContainer: document.getElementById("bookmarks")!,
-      addBookmarkBtn: document.getElementById("add-bookmark-btn")!,
-      clearBookmarksBtn: document.getElementById("clear-bookmarks-btn")!,
+      addBookmarkBtn: document.getElementById("add-bookmark-btn")! as HTMLButtonElement,
+      clearBookmarksBtn: document.getElementById("clear-bookmarks-btn")! as HTMLButtonElement,
       fileInput: document.getElementById("file-input") as HTMLInputElement,
-      loadFileBtn: document.getElementById("load-file-btn")!,
+      loadFileBtn: document.getElementById("load-file-btn")! as HTMLButtonElement,
       modal: document.getElementById("json-modal")!,
       modalFileInput: document.getElementById(
         "modal-file-input"
-      ) as HTMLInputElement,
-      modalLoadFileBtn: document.getElementById("modal-load-file-btn")!,
-      commandListBtn: document.getElementById("command-list-btn")!,
+      ) as HTMLButtonElement,
+      modalLoadFileBtn: document.getElementById("modal-load-file-btn")! as HTMLButtonElement,
+      commandListBtn: document.getElementById("command-list-btn")! as HTMLButtonElement,
       commandSidebar: document.getElementById("command-sidebar")!,
-      closeSidebarBtn: document.getElementById("close-sidebar-btn")!,
+      closeSidebarBtn: document.getElementById("close-sidebar-btn")! as HTMLButtonElement,
       commandList: document.getElementById("command-list")!,
-      terminalContainer: document.querySelector(".terminal-container")!,
+      terminalContainer: document.querySelector<HTMLElement>(".terminal-container")!,
       tooltip: this.createTooltip(),
     };
   }
