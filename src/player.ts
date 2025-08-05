@@ -11,7 +11,6 @@ export class RewindTTYPlayer {
     private terminal: Terminal;
     private fitAddon: FitAddon;
     private sessions: Session[] = [];
-    private isInteractiveMode: boolean = false;
     private bookmarks: Bookmark[] = [];
     private playbackState: PlaybackState;
     private timelineCommands: TimelineCommand[] = [];
@@ -231,7 +230,6 @@ export class RewindTTYPlayer {
                 const sessionData = JSON.parse(content);
 
                 this.sessions = sessionData.sessions;
-                this.isInteractiveMode = sessionData.metadata.interactive_mode || false;
 
                 this.processSessionData();
                 this.elements.currentCommand.textContent = `Loaded: ${file.name}`;
@@ -263,7 +261,6 @@ export class RewindTTYPlayer {
                 const sessionData = JSON.parse(content);
 
                 this.sessions = sessionData.sessions;
-                this.isInteractiveMode = sessionData.metadata.interactive_mode || false;
 
                 this.processSessionData();
                 this.elements.currentCommand.textContent = `Loaded: ${file.name}`;
