@@ -1,12 +1,18 @@
 <p align="center">
   <picture>
-    <img style="max-width:200px;height:auto"  src="https://www.rewindtty.dev/assets/logo.png" alt="rewindtty logo">
+    <img style="max-width:200px;height:auto"  src="https://www.rewindtty.dev/assets/images/logo.png" alt="rewindtty logo">
   </picture>
 </p>
 
 # RewindTTY Browser Player
 
 A modern web-based player for RewindTTY terminal session recordings with advanced playback controls and interactive features.
+
+<p align="center">
+  <picture>
+    <img style="max-width:200px;height:auto"  src="https://www.rewindtty.dev/assets/images/player.png" alt="player screenshot">
+  </picture>
+</p>
 
 ## Features
 
