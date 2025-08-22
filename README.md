@@ -50,15 +50,26 @@ npm run build
 
 ## Usage
 
+### Loading Sessions
+
+**Option 1: File Upload**
 1. Open the application in your browser
 2. Select a RewindTTY JSON file using the file picker
-3. Use the playback controls to navigate through the session:
-   - **Play/Pause**: Click the play button or press Space
-   - **Restart**: Click restart button or press R
-   - **Speed Control**: Click speed button to cycle through speeds
-   - **Timeline**: Click anywhere to seek, drag to scrub
-   - **Bookmarks**: Press B to add bookmark, click bookmarks to jump
-   - **Commands**: Click command list button to view all commands
+
+**Option 2: URL-based Playback**
+- Navigate directly to `/play/:id` where `:id` is the session identifier
+- Example: `https://play.rewindtty.dev/play/session123`
+- The application will automatically load the session from the configured upload URL
+
+### Playback Controls
+
+Use the playback controls to navigate through the session:
+- **Play/Pause**: Click the play button or press Space
+- **Restart**: Click restart button or press R
+- **Speed Control**: Click speed button to cycle through speeds
+- **Timeline**: Click anywhere to seek, drag to scrub
+- **Bookmarks**: Press B to add bookmark, click bookmarks to jump
+- **Commands**: Click command list button to view all commands
 
 ## JSON Format
 
