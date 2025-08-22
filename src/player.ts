@@ -3,7 +3,7 @@ import type {
     Session,
     Bookmark,
     PlaybackState,
-    TimelineCommand,
+    TimelineCommand, Routing,
 } from "./types";
 import {FitAddon} from "@xterm/addon-fit";
 
@@ -177,13 +177,55 @@ export class RewindTTYPlayer {
         });
     }
 
-    async initialize(): Promise<void> {
+    async initialize(routing?: Routing): Promise<void> {
         this.terminal.open(document.getElementById("terminal")!);
         this.fitAddon.fit();
 
-        // Show modal on startup and disable controls
-        this.showModal();
-        this.disableControls();
+        if (routing?.route === 'play' && routing.sessionId) {
+            await this.loadFromUrl(routing.sessionId);
+        } else {
+            this.showModal();
+            this.disableControls();
+        }
+    }
+
+    async handleRouteChange(routing: Routing): Promise<void> {
+        if (routing.route === 'play' && routing.sessionId) {
+            await this.loadFromUrl(routing.sessionId);
+        } else {
+            this.showModal();
+            this.disableControls();
+        }
+    }
+
+    private async loadFromUrl(sessionId: string): Promise<void> {
+        const uploadUrl = import.meta.env.VITE_UPLOAD_URL;
+        const url = `${uploadUrl}/play/${sessionId}`;
+
+        try {
+            this.elements.currentCommand.textContent = `Loading session ${sessionId}...`;
+
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch session: ${response.status} ${response.statusText}`);
+            }
+
+            const sessionData = await response.json();
+            this.sessions = sessionData.sessions;
+
+            this.processSessionData();
+            this.elements.currentCommand.textContent = `Loaded session: ${sessionId}`;
+            this.isJsonLoaded = true;
+            this.hideModal();
+            this.enableControls();
+            this.play();
+        } catch (error) {
+            console.error("Failed to load session from URL:", error);
+            this.elements.currentCommand.textContent = `Error: Failed to load session ${sessionId}`;
+            alert(`Failed to load session ${sessionId}. Please check the session ID and try again.`);
+            this.showModal();
+            this.disableControls();
+        }
     }
 
     private showModal(): void {

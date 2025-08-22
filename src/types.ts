@@ -44,3 +44,8 @@ export interface TimelineCommand {
     startTime: number;
     position: number;
 }
+
+export interface Routing {
+    route: 'home' | 'play';
+    sessionId?: string;
+}
