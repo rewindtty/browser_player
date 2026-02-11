@@ -1,3 +1,5 @@
+[![Discord](https://img.shields.io/discord/1470772941296894128?color=5865F2&logo=discord&logoColor=white)](https://discord.gg/WgsVw69F)
+
 <p align="center">
   <picture>
     <img style="max-width:200px;height:auto"  src="https://www.rewindtty.dev/assets/images/logo.png" alt="rewindtty logo">
@@ -13,6 +15,8 @@ A modern web-based player for RewindTTY terminal session recordings with advance
     <img style="max-width:200px;height:auto"  src="https://www.rewindtty.dev/assets/images/player.png" alt="player screenshot">
   </picture>
 </p>
+
+**Discord** - [Join our discord server](https://discord.gg/WgsVw69F) and chat with the maintainers.
 
 ## Features
 
